@@ -24,6 +24,7 @@ fn create_soroswap_library_contract<'a>(e: &Env) -> MissingValueContractClient<'
 
 // Test Functions
 struct MissingValueContractTest<'a> {
+    env: Env,
     contract: MissingValueContractClient<'a>,
 }
 
@@ -33,6 +34,7 @@ impl<'a> MissingValueContractTest<'a> {
         env.mock_all_auths();
         let contract = create_soroswap_library_contract(&env);
         MissingValueContractTest {
+            env,
             contract,
         }
     }
@@ -49,15 +51,23 @@ fn test_repeats_works() {
 }
 
 
+#[test]
+fn test_repeats_works_2() {
+    let test = MissingValueContractTest::setup();
+    let user = Address::random(&test.env);
+    let repeat_address = test.contract.repeat_address(&user);
+    assert_eq!(repeat_address, user);
+
+}
+
 
 #[test]
 fn test_mint_works() {
-    let e: Env = Default::default();
-    e.mock_all_auths(); // TODO: can we test otherwise?
-    
-    let admin = Address::random(&e);
-    let (token, token_admin_client) = create_token_contract(&e, &admin);
     let test = MissingValueContractTest::setup();
+    test.env.mock_all_auths(); // TODO: can we test otherwise?
+    
+    let admin = Address::random(&test.env);
+    let (token, token_admin_client) = create_token_contract(&test.env, &admin);
 
     token_admin_client.mint(&test.contract.address, &1000);
     assert_eq!(token.balance(&test.contract.address), 1000);
@@ -66,12 +76,11 @@ fn test_mint_works() {
 
 #[test]
 fn test_is_failing() {
-    let e: Env = Default::default();
-    e.mock_all_auths(); // TODO: can we test otherwise?
-    
-    let admin = Address::random(&e);
-    let (token, _token_admin_client) = create_token_contract(&e, &admin);
     let test = MissingValueContractTest::setup();
+    test.env.mock_all_auths(); // TODO: can we test otherwise?
+    
+    let admin = Address::random(&test.env);
+    let (token, _token_admin_client) = create_token_contract(&test.env, &admin);
 
    let repeat_address = test.contract.repeat_address(&token.address);
 

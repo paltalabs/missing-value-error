@@ -3,7 +3,7 @@
 ## How to replicate
 1.- To run into a soroban-preview 11 docker container
 ```
-bash quickstart.sh standa
+bash run.sh
 ```
 2.-
 ```

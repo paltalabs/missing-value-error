@@ -1,17 +1,29 @@
 # Missing Value Error
+This error was caused becase I was using different environments.
+Thanks to @dmytro_stellar that showed me the way : https://discord.com/channels/897514728459468821/1162452486104293396/1162453048644337714
+
+This error was fixed in https://github.com/paltalabs/missing-value-error/commit/615a2662aa0e87c4b22bf0aea5eb83aa3b63c4eb
 
 ## How to replicate
-1.- To run into a soroban-preview 11 docker container
+0.- Clone this project and go to a commit before the fix:
+
+```bash
+git clone https://github.com/paltalabs/missing-value-error
+cd missing-value-error
+git checkout bf7edf9d903ad4bf33af333330681cf72a826b47
 ```
+
+1.- To run into a soroban-preview 11 docker container
+```bash
 bash run.sh
 ```
-2.-
+2.-bash
 ```
 make build
 make test
 ```
 
-## What is breaking:
+## What was breaking:
 We are testing the following function:
 ```rust
 fn repeat_address(address: Address) -> Address {
@@ -36,6 +48,10 @@ fn test_is_failing() {
 }
 
 ```
+
+## What was the error:
+In the test we where setting one environment to create the token contract, and another environment to create the test.
+Check the commit that fixed the test: https://github.com/paltalabs/missing-value-error/commit/615a2662aa0e87c4b22bf0aea5eb83aa3b63c4eb
 
 
 ## The error
